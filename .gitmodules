@@ -1,0 +1,6 @@
+[submodule "reg/g/pcds/pyps/apps/ioc/latest"]
+	path = reg/g/pcds/pyps/apps/ioc/latest
+	url = https://github.com/pcdshub/IocManager
+[submodule "reg/d/iocCommon/rhel7-x86_64"]
+	path = reg/d/iocCommon/rhel7-x86_64
+	url = git@github.com:pcdshub/iocCommon-rhel7
