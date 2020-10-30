@@ -212,9 +212,74 @@ repository and can be found here:
 common_env.sh
 -------------
 
-[common_env.sh](https://github.com/pcdshub/iocCommon-All/blob/pcds-All/common_env.sh)
+Source: [common_env.sh](https://github.com/pcdshub/iocCommon-All/blob/pcds-All/common_env.sh)
+
+Sets common environment variables for launching IOCs.
+
+### Prerequisites
+* Run as root or `$IOC_USER`
+* Variables set:
+    * `$IOC_USER` (username)
+    * `$IOC` (short hostname of IOC host, or soft IOC name)
+
+### Steps
+
+1. Source the first one that exists of:
+	* /usr/local/lcls/epics/config/common_dirs.sh 
+	* /reg/g/pcds/pyps/config/common_dirs.sh
+	* /afs/slac/g/lcls/epics/config/common_dirs.sh
+2. The 2nd item from step (1) is included in this repository: 
+   [common_dirs.sh](/reg/g/pcds/pyps/config/common_dirs.sh)
+    * The following variables of note are set:
+    ```
+    CONFIG_SITE_TOP=/reg/g/pcds/pyps/config
+    CTRL_REPO=file:///afs/slac/g/pcds/vol2/svn/pcds
+    DATA_SITE_TOP=/reg/d
+    EPICS_SETUP=$SETUP_SITE_TOP
+    EPICS_SITE_TOP=/reg/g/pcds/epics
+    FACILITY_ROOT=/reg/g/pcds
+    GIT_SITE_TOP=/afs/slac/g/cd/swe/git/repos
+    GIT_TOP=$GIT_SITE_TOP
+    GW_SITE_TOP=/reg/g/pcds/gateway
+    IOC_COMMON=/reg/d/iocCommon
+    IOC_DATA=/reg/d/iocData
+    PACKAGE_SITE_TOP=/reg/g/pcds/package
+    PSPKG_ROOT=/reg/g/pcds/pkg_mgr
+    PYAPPS_SITE_TOP=/reg/g/pcds/controls
+    PYPS_SITE_TOP=/reg/g/pcds/pyps
+    SETUP_SITE_TOP=/reg/g/pcds/setup
+    TOOLS_SITE_TOP=/reg/common/tools
+    ```
+3. Source `epicsenv-cur.sh` from `/reg/g/pcds/setup/epicsenv-cur`
+    * Exception: on ARM7L platforms, `epicsenv-3.15.5-apalis-2.0.sh` is used.
+4. Set the variables:
+    * If not already set, `PROCSERV_VERSION=2.8.0-1.1.0`
+    * Fix `PROCSERV_VERSION`, `CROSS_ARCH`, `PYTHON_VERSION` and path variables
+      for ARM if necessary.
+    * Add `$PSPKG_ROOT/release/procServ/$PROCSERV_VERSION/$EPICS_HOST_ARCH/bin`
+      to `$PATH` if it exists.
+    * `PROCSERV_EXE` to the absolute path of `procServ`
+	* `PROCSERV="$PROCSERV_EXE --allow --ignore ^D^C --logstamp"`
+    * `IOC_HOST=$(hostname -s)`
+    * `CREATE_TIME` to the current date, down to the second.
+5. Ensure `IOC_USER` is set - warn and exit without error if not.
+6. By way of `/sbin/runuser` or `su`, perform as `$IOC_USER`:
+    * Create `$IOC_DATA/$IOC_HOST`, ensure it's writable by `ps-ioc`
+    * Create subdirectories `{archive,autosave,iocInfo,logs}`
+7. Check `$IOC` is set or warn and exit without error.
+8. As `$IOC_USER`, make `$IOC_DATA/$IOC`
+    * Create subdirectories `{archive,autosave,iocInfo,logs}` with lax
+      permissions (and ps-ioc accessibility)
 
 startAll
 --------
 
-[startAll](https://github.com/pcdshub/IocManager/blob/master/startAll)
+Source: [startAll.py](https://github.com/pcdshub/IocManager/blob/master/startAll.py)
+(Wrapped by [startAll](https://github.com/pcdshub/IocManager/blob/master/startAll))
+
+epicsenv-cur
+------------
+
+Source: [epicsenv-cur](https://github.com/pcdshub/epics-setup/blob/pcds-master/epicsenv-cur.sh)
+A soft-link to the latest version. At the time of writing, this is:
+[epicsenv-7.0.2-2.0.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/epicsenv-7.0.2-2.0.sh))

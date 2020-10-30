@@ -7,3 +7,6 @@
 [submodule "reg/d/iocCommon/All"]
 	path = reg/d/iocCommon/All
 	url = git@github.com:pcdshub/iocCommon-All
+[submodule "reg/g/pcds/setup"]
+	path = reg/g/pcds/setup
+	url = git@github.com:pcdshub/epics-setup
