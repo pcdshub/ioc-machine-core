@@ -208,6 +208,9 @@ repository and can be found here:
     * Logs to `$IOC_DATA/$IOC_HOST/iocInfo/caRepeater.log`
 14. Starts all IOCs by way of `startAll` (see following section)
     * Starts those from the hutch, then xrt, then laser hall
+    * Arguments are: 
+        * `$1=` `${cfg}`, xrt, or las
+        * `$2=$host`
 
 common_env.sh
 -------------
@@ -277,9 +280,70 @@ startAll
 Source: [startAll.py](https://github.com/pcdshub/IocManager/blob/master/startAll.py)
 (Wrapped by [startAll](https://github.com/pcdshub/IocManager/blob/master/startAll))
 
+"startAll hutch hostname" starts all of the IOCs for the given hutch on the
+given hostname.
+
+### Prerequisites
+* For the wrapper script `startAll`:
+* First argument: hutch (or xrt, las) - referred to as `cfg`
+* Second argument: host
+
+### Steps
+
+#### Wrapper
+
+1. Set variables, if not previously set
+    * `PYPS_ROOT=/reg/g/pcds/pyps`
+    * `PSPKG_ROOT=/reg/g/pcds/pkg_mgr`
+    * `PSPKG_RELEASE=controls-basic-0.0.1`
+    * `SCRIPTROOT=/reg/g/pcds/pyps/config/$1/iocmanager` (where `$1=hutch`)
+2. Run `python $SCRIPTROOT/startAll.py "$@"` (with all arguments)
+
+#### startAll.py
+
+* TODO
+
 epicsenv-cur
 ------------
 
 Source: [epicsenv-cur](https://github.com/pcdshub/epics-setup/blob/pcds-master/epicsenv-cur.sh)
 A soft-link to the latest version. At the time of writing, this is:
 [epicsenv-7.0.2-2.0.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/epicsenv-7.0.2-2.0.sh))
+
+### Prerequisites
+* None
+
+### Steps
+
+7.0.2-2.0 is used for example here.
+
+1. Source common directories scripts [/reg/g/pcds/pyps/config/common_dirs.sh](/reg/g/pcds/pyps/config/common_dirs.sh).
+2. Set variables 
+
+    ```
+    EPICS_SITE_TOP=/reg/g/pcds/epics
+    BASE_MODULE_VERSION=R7.0.2-2.0
+    EPICS_EXTENSIONS=${EPICS_SITE_TOP}/extensions/R0.2.0
+    EPICS_BASE=${EPICS_SITE_TOP}/base/${BASE_MODULE_VERSION}
+    EPICS_MODULES=${EPICS_SITE_TOP}/${BASE_MODULE_VERSION}/modules
+    ```
+3. Source some utilities for munging paths together in
+   [pathmunge.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/pathmunge.sh)
+4. Clear `PVACCESS`, `PVAPY` if previously set, and purges any paths associated with
+   pvAccess or pvaPy from `LD_LIBRARY_PATH`, `PYTHONPATH`, and `PATH`.
+5. Sources [generic-epics-setup.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/generic-epics-setup.sh)
+    * See separate section below.
+6. Sources [pcds_shortcuts.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/pcds_shortcuts.sh)
+    * See separate section below.
+
+generic-epics-setup.sh
+----------------------
+
+Source: [generic-epics-setup.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/generic-epics-setup.sh)
+
+### Prerequisites
+* None
+
+### Steps
+
+* TODO
