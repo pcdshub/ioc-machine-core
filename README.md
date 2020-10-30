@@ -342,8 +342,322 @@ generic-epics-setup.sh
 Source: [generic-epics-setup.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/generic-epics-setup.sh)
 
 ### Prerequisites
-* None
+Must be set:
+* `$EPICS_SITE_TOP`
+* `$SETUP_SITE_TOP`
+* `$TOOLS_SITE_TOP`
+
+And then to choose a specific version:
+* `$EPICS_BASE` - Path to top of base release
+* `$EPICS_EXTENSIONS` - Path to top of extensions release
+
+For versions before R7, the following are needed as well:
+* `$NORMATIVETYPES`, `$PVACCESS`, `$PVDATA`, and `$PVAPY`
+
+Setting `EPICS_CA_AUTO_ADDR_LIST` will avoid `epics-ca-env.sh` from being
+sourced.
 
 ### Steps
 
-* TODO
+1. Verify that the necessary variables are set
+2. Set up Channel Access address list settings, if not currently configured 
+    * This only checks whether `$EPICS_CA_AUTO_ADDR_LIST` is set.
+    * Sources [epics-ca-env.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/epics-ca-env.sh)
+3. At this point, the CA environment should be configured such that the following
+   variables are set (based on `epics-ca-env.sh`):
+   ```
+    EPICS_CA_SERVER_PORT=5064
+    EPICS_CA_REPEATER_PORT=5065
+    EPICS_CA_MAX_ARRAY_BYTES=40000000
+    EPICS_CA_AUTO_ADDR_LIST=YES
+    EPICS_CA_BEACON_PERIOD=15.0
+    EPICS_CA_CONN_TMO=30.0
+    EPICS_CA_MAX_SEARCH_PERIOD=300
+
+    # EPICS pvAccess env variables
+    EPICS_PVA_SERVER_PORT=5075
+    EPICS_PVA_BROADCAST_PORT=5076
+    EPICS_PVA_AUTO_ADDR_LIST=YES
+    ```
+
+    Depending on the host, `EPICS_CA_ADDR_LIST` may be set as well.
+4. Source some utilities for munging paths together in
+   [pathmunge.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/pathmunge.sh)
+5. Paths will be added to `PATH`:
+    * `$TOOLS_SITE_TOP/bin` (`/reg/common/tools/bin`)
+    * `$TOOLS_SITE_TOP/script` (`/reg/common/tools/script`)
+6. Additional variables will be set:
+    * `EPICS_HOST_ARCH=$(${EPICS_BASE}/startup/EpicsHostArch)` (e.g., `rhhel7-x86_64`)
+7. Stale EPICS-related paths will be purged, including those from `PATH`,
+   `LD_LIBRARY_PATH`, and `MATLABPATH`.
+8. New paths will be added, as necessary to `LD_LIBRARY_PATH`:
+    * `${EPICS_BASE}/lib/${EPICS_HOST_ARCH}`
+    * `${EPICS_EXTENSIONS}/lib/${EPICS_HOST_ARCH}` (if set)
+9. (Support for deprecated pvAccess/V4 stuff skipped)
+    * One worth noting: `pvaPy` for 2.7 gets added to `$PYTHONPATH` if `$PVAPY`
+      set.
+10. If `$EPICS_EXTENSIONS` is set
+    * Configure EDM. Set:
+        * `EDMLIBS`
+        * `EDMHELPFILES`
+        * `EDMWEBBROWSER`
+        * `EDM`
+        * `EDMFILES`
+	    * `EDMCALC`
+	    * `EDMOBJECTS`
+	    * `EDMPVOBJECTS`
+	    * `EDMFILTERS`
+	    * `EDMUSERLIB`
+    * Configure VisualDCT. Set:
+		* `VDCT_CLASSPATH="${EPICS_EXTENSIONS}/javalib/VisualDCT.jar"`
+
+epics-ca-env.sh
+---------------
+
+### Steps
+
+1. Sets variables
+    ```
+    EPICS_CA_SERVER_PORT=5064
+    EPICS_CA_REPEATER_PORT=5065
+    EPICS_CA_MAX_ARRAY_BYTES=40000000
+    EPICS_CA_AUTO_ADDR_LIST=YES
+    EPICS_CA_BEACON_PERIOD=15.0
+    EPICS_CA_CONN_TMO=30.0
+    EPICS_CA_MAX_SEARCH_PERIOD=300
+
+    # EPICS pvAccess env variables
+    EPICS_PVA_SERVER_PORT=5075
+    EPICS_PVA_BROADCAST_PORT=5076
+    EPICS_PVA_AUTO_ADDR_LIST=YES
+    HOSTNAME=$(hostname)
+
+    ARCHIVER_URL=http://pscaa02.slac.stanford.edu:17665/mgmt/ui/index.html
+    ARCHIVE_VIEWER_URL=https://pswww.slac.stanford.edu/archiveviewer/retrieval/ui/viewer/archViewer.html
+    ```
+
+2. A seemingly non-existent file: `/afs/slac/g/pcds/setup/lcls-ca-env.sh` is
+    referenced as well, if running on a machine without access to `/reg/neh`:
+    https://github.com/pcdshub/epics-setup/blob/b37c18ce5a6771fceb0a6c6b141cc6e32318c922/epics-ca-env.sh#L20-L24
+
+3. Depending on the host, `EPICS_CA_AUTO_ADDR_LIST` and `EPICS_CA_ADDR_LIST`
+   will be set as well.
+
+4. Adds bash aliases for viewing the archiver:
+    * `Archiver`
+    * `ArchiveManager`
+    * `ArchiveViewer`
+
+For the following hosts, `EPICS_CA_AUTO_ADDR_LIST` will be set to `NO`,
+and the table of addresses will be set as `EPICS_CA_ADDR_LIST`.
+
+
+| Host          | EPICS_CA_ADDR_LIST | EPICS_CA_AUTO_ADDR_LIST |
+|---------------|--------------------|-------------------------|
+| pscaasrv      | 134.79.165.255     | NO                      |
+| pscaesrv      | 134.79.165.255     | NO                      |
+| pscaa0*       | 134.79.165.255     | NO                      |
+| tmo-control   | 172.21.135.255     | NO                      |
+| tmo-monitor   | 172.21.135.255     | NO                      |
+| tmo-daq       | 172.21.135.255     | NO                      |
+| tmo-console   | 172.21.135.255     | NO                      |
+| amo-control   | 172.21.37.255      | NO                      |
+| amo-monitor   | 172.21.37.255      | NO                      |
+| amo-daq       | 172.21.37.255      | NO                      |
+| amo-console   | 172.21.37.255      | NO                      |
+| cxi-control   | 172.21.71.255      | NO                      |
+| cxi-monitor   | 172.21.71.255      | NO                      |
+| cxi-daq       | 172.21.71.255      | NO                      |
+| cxi-console   | 172.21.71.255      | NO                      |
+| mfx-hutch01   | 172.21.75.255      | NO                      |
+| mfx-control   | 172.21.75.255      | NO                      |
+| mfx-monitor   | 172.21.75.255      | NO                      |
+| mfx-daq       | 172.21.75.255      | NO                      |
+| mfx-console   | 172.21.75.255      | NO                      |
+| ioc-mec-rec01 | 172.21.79.255      | NO                      |
+| mec-control   | 172.21.79.255      | NO                      |
+| mec-monitor   | 172.21.79.255      | NO                      |
+| mec-daq       | 172.21.79.255      | NO                      |
+| mec-console   | 172.21.79.255      | NO                      |
+| ioc-xcs-misc1 | 172.21.83.255      | NO                      |
+| xcs-control   | 172.21.83.255      | NO                      |
+| xcs-daq       | 172.21.83.255      | NO                      |
+| xcs-console   | 172.21.83.255      | NO                      |
+| xpp-control   | 172.21.87.255      | NO                      |
+| xpp-daq2      | 172.21.87.255      | NO                      |
+| xpp-daq       | 172.21.87.255      | NO                      |
+| ioc-fee-rec*  | 172.21.91.255      | NO                      |
+| sxr-elog      | 172.21.95.255      | NO                      |
+| sxr-control   | 172.21.95.255      | NO                      |
+| sxr-monitor   | 172.21.95.255      | NO                      |
+| sxr-daq       | 172.21.95.255      | NO                      |
+| sxr-console   | 172.21.95.255      | NO                      |
+
+
+pcds_shortcuts.sh
+-----------------
+
+Source: [pcds_shortcuts.sh](https://github.com/pcdshub/epics-setup/blob/pcds-master/pcds_shortcuts.sh)
+
+### Steps
+1. If not previously set, sets:
+    ```
+    CONFIG_SITE_TOP=/reg/g/pcds/pyps/config
+    PACKAGE_SITE_TOP=/reg/g/pcds/package
+    EPICS_SITE_TOP=/reg/g/pcds/epics
+    IOC_COMMON=/reg/d/iocCommon
+    IOC_DATA=/reg/d/iocData
+    PYPS_SITE_TOP=/reg/g/pcds/pyps
+    PKGS=$PACKAGE_SITE_TOP
+    ```
+
+2. Sets `umask 0002`, allowing group write access to files written.
+   This results in `umask -S`: `u=rwx,g=rwx,o=rx`
+3. Adds many utility (bash) functions to the environment (see table)
+4. Sets:
+    * `$IP` to the current machine's IP address.
+    * `$MASK` to the subnet mask (appears to be buggy)
+    * `$SUBNET` to the third octet of `$IP` (fixing for /22 subnet masks as well)
+    * These variables can be used to determine where screens are being launched
+      from, for example.
+
+#### Non-screen functions
+
+| Function            | Description                                                                              | Script                                                     |
+|---------------------|------------------------------------------------------------------------------------------|------------------------------------------------------------|
+| find_pv             | This script will search for each specified EPICS PV in pvlist files and startup scripts. |                                                            |
+| gsed                | Wrapper for `sed`, operating on multiple files in-place and noting which changed.        |                                                            |
+| show_epics_sioc     | Similar to `ssh_show_procServ`, this shows a table of IOCs - but on one or more hosts.   |                                                            |
+| show_epics_versions | An alias for the `epics-versions` tool.                                                  |                                                            |
+| ssh_show_procServ   | Shows a table of procServ information including port numbers.                            |                                                            |
+| svnvdiff            | (Alias) Run a visual diff tool for ye old SVN.                                           | svn diff --diff-cmd $TOOLS_SITE_TOP/bin/svn-vdiffwrap.sh   |
+
+#### Screen helpers
+
+| Function            | Description                                                            | Script                                                     |
+|---------------------|------------------------------------------------------------------------|------------------------------------------------------------|
+| cxi                 | CXI screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/cxi/current/cxihome      |
+| det                 | Top-level detector screen.                                             | /reg/g/pcds/epics-dev/screens/edm/det/current/detHome.sh   |
+| fee                 | Deprecated - no longer launches the FEE screen. (aliases: xrt, xtod)   | Was: /reg/g/pcds/epics-dev/screens/edm/fee/current/feehome |
+| gw                  | Gateway screen.                                                        | /reg/g/pcds/epics-dev/screens/edm/gateway/current/gwhome   |
+| hpl                 | HPL screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/hpl/current/hplhome      |
+| kfe                 | LUCID KFE screen.                                                      | ${EPICS_SETUP}/lucid-launcher.sh KFE                       |
+| kpmps               | KFE PMPS screen.                                                       | ${EPICS_SETUP}/pmps-launcher.sh KFE                        |
+| las                 | Laser screen.                                                          | /reg/g/pcds/epics-dev/screens/edm/las/current/laserhome    |
+| lfe                 | LUCID LFE screen.                                                      | ${EPICS_SETUP}/lucid-launcher.sh LFE                       |
+| lpmps               | LFE PMPS screen.                                                       | ${EPICS_SETUP}/pmps-launcher.sh LFE                        |
+| mec                 | MEC screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/mec/current/mechome      |
+| mfx                 | MFX screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/mfx/current/mfxhome      |
+| pcds                | Top-level PCDS screen.                                                 | /reg/g/pcds/epics-dev/screens/edm/pcds/current/pcdshome    |
+| pydm_lclshome       | Top-level PyDM screen.                                                 | ${EPICS_SETUP}/pydm_lclshome.sh                            |
+| tmo                 | LUCID TMO screen.                                                      | ${EPICS_SETUP}/lucid-launcher.sh TMO                       |
+| tst                 | TST screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/tst/current/tsthome      |
+| updateScreenLinks   | Update screen links for given hutches.                                 |                                                            |
+| xcs                 | XCS screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/xcs/current/xcshome      |
+| xpp                 | XPP screen.                                                            | /reg/g/pcds/epics-dev/screens/edm/xpp/current/xpphome      |
+
+### ssh_show_procServ
+
+Usage: `ssh_show_procServ [host] [user]`
+
+`host` defaults to the current machine, and `user` defaults to `$USER`.
+
+Shows a table of procServ information including port numbers:
+
+```bash
+[klauer@ioc-kfe-srv01  setup]$ ssh_show_procServ
+2943   kfeioc    caRepeater                procServ  ioc-kfe-srv01       30000
+3150   kfeioc    ioc-plc-kfe-gatt          procServ  ioc-kfe-srv01       31313
+3152   kfeioc    ioc-kfe-gmd-vac           procServ  ioc-kfe-srv01       30105
+3154   kfeioc    ioc-kfe-gmd-vac-support   procServ  ioc-kfe-srv01       30102
+3241   kfeioc    ioc-kfe-mono-gige03       procServ  ioc-kfe-srv01       34203
+3471   kfeioc    ioc-kfe-mono-gige04       procServ  ioc-kfe-srv01       34204
+3627   kfeioc    ioc-kfe-motion            procServ  ioc-kfe-srv01       34242
+3735   kfeioc    ioc-kfe-rix-motion        procServ  ioc-kfe-srv01       34222
+3836   kfeioc    ioc-kfe-rtd01             procServ  ioc-kfe-srv01       30150
+4003   kfeioc    ioc-kfe-twistorr-debug    procServ  ioc-kfe-srv01       30110
+4084   kfeioc    ioc-kfe-vac               procServ  ioc-kfe-srv01       30104
+4375   kfeioc    ioc-kfe-vac-support       procServ  ioc-kfe-srv01       30100
+4535   kfeioc    ioc-kfe-xgmd-vac          procServ  ioc-kfe-srv01       30106
+4884   kfeioc    ioc-kfe-xgmd-vac-support  procServ  ioc-kfe-srv01       30101
+5031   kfeioc    ioc-mcp-tmo-al1k4         procServ  ioc-kfe-srv01       30250
+5188   kfeioc    ioc-rixs-optics           procServ  ioc-kfe-srv01       30107
+5513   kfeioc    ioc-tmo-optics            procServ  ioc-kfe-srv01       30103
+```
+
+### show_epics_sioc
+
+Usage: `show_epics_sioc [host1] [host2...]`
+Usage: `show_epics_sioc all`
+
+Similar to `ssh_show_procServ`, this shows a table of IOCs - but on one or more
+hosts (or even _all_ configured hosts, found from `$IOC_COMMON/hosts`).
+
+```bash
+[klauer@ioc-kfe-srv01  setup]$ show_epics_sioc ioc-lfe-srv01
+PID    USER      SIOC                      COMMAND   HOSTNAME            PORT
+2956   lfeioc    caRepeater                procServ  ioc-lfe-srv01       30000
+3163   lfeioc    ioc-lfe-at1l0             procServ  ioc-lfe-srv01       31113
+3165   lfeioc    ioc-lfe-gatt-serial       procServ  ioc-lfe-srv01       31013
+3167   lfeioc    ioc-plc-lfe-gem           procServ  ioc-lfe-srv01       31313
+3170   lfeioc    ioc-lfe-motion            procServ  ioc-lfe-srv01       34242
+3359   lfeioc    ioc-lfe-optics            procServ  ioc-lfe-srv01       30014
+3654   lfeioc    ioc-lfe-plv-psu           procServ  ioc-lfe-srv01       30301
+3776   lfeioc    ioc-lfe-pwr-01            procServ  ioc-lfe-srv01       30001
+4012   lfeioc    ioc-lfe-pwr-02            procServ  ioc-lfe-srv01       30002
+4225   lfeioc    ioc-lfe-rtd01             procServ  ioc-lfe-srv01       30131
+4420   lfeioc    ioc-lfe-vac               procServ  ioc-lfe-srv01       30111
+4574   lfeioc    ioc-lfe-vac-support       procServ  ioc-lfe-srv01       30100
+4778   lfeioc    ioc-txi-optics            procServ  ioc-lfe-srv01       30015
+```
+
+
+### find_pv
+
+Usage: find_pv pv_name [pv_name2 ...]
+
+This script will search for each specified EPICS PV in:
+  /reg/d/iocData/ioc*/iocInfo/IOC.pvlist
+
+Then it looks for the linux host or hard IOC hostname in:
+  /reg/d/iocCommon/hioc/ioc*/startup.cmd
+If no host is found, the IOC will not autoboot after a power cycle!
+
+Finally it looks for the boot directory in:
+  /reg/d/iocCommon/hioc/<ioc-name>/startup.cmd
+
+Hard IOC boot directories are shown with the nfs mount name.
+Typically this is /iocs mounting /reg/g/pcds/package/epics/ioc
+
+
+### updateScreenLinks
+
+usage: `updateScreenLinks <pathToScreenRelease>`
+
+Creates a soft link to the specified directory in the epics-dev version of each
+hutch's edm home directory.  The soft link name is derived from the basename of
+the provided path.
+
+If an absolute path is not provided, the path is evaluated relative to the root
+of our EPICS releases:
+
+    /reg/g/pcds/epics
+
+Examples:
+
+```
+updateScreenLinks /reg/g/pcds/epics/ioc/las/fstiming/R2.3.0/fstimingScreens
+updateScreenLinks modules/history/R0.4.0/historyScreens
+```
+
+
+### gsed
+
+```
+Usage: gsed sedExpr file ....
+Example: gsed s/R0.1.0/R0.2.0/g ioc-tst-cam1.cfg ioc-*2.cfg
+
+$ sed s/R0.1.0/R0.2.0/g in specified files
+============ ioc-tst-cam1.cfg: UPDATED
+============ ioc-tst-cam2.cfg: Same, N/C
+```
