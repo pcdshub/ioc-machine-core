@@ -12,9 +12,11 @@ make_and_keep reg/g/pcds/package/epics/3.14/ioc
 make_and_keep reg/g/pcds/controls/camerecord
 make_and_keep reg/d/iocData
 make_and_keep reg/d/iocCommon
-make_and_keep reg/d/iocCommon/hosts/localhost/
+make_and_keep reg/d/iocCommon/hosts/localhost
 make_and_keep reg/g/pcds/pyps/apps/ioc
-make_and_keep reg/g/pcds/pyps/config
+
+# For our test environment:
+make_and_keep reg/g/pcds/pyps/config/tst
 
 # These are part of submodules - but we want to add on some stuff:
 make_and_keep additional_files/reg/d/iocCommon/rhel7-x86_64/facility
