@@ -16,15 +16,15 @@ IOC machine provisioning
 
 Machines provisioned by way of puppet:
 
-    https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files
+https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files
 
 Per-node manifests are specified here:
 
-    https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files/src/branch/master/manifests/nodes
+https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files/src/branch/master/manifests/nodes
 
 Which reference individual modules, indicating how to install the given packages:
 
-    https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files/src/branch/master/modules
+https://pswww.slac.stanford.edu/pcds/git/PCDS/Puppet_Files/src/branch/master/modules
 
 ### Additional files
 
@@ -60,7 +60,8 @@ Port numbers, per platform:
 ### ioc.service
 
 This service is configured to run after `multi-user.target` (run level 2),
-executing this bash script: [/usr/lib/systemd/scripts/ioc.sh].
+executing this bash script:
+[/usr/lib/systemd/scripts/ioc.sh](/usr/lib/systemd/scripts/ioc.sh).
 
 It is configured on `ioc-kfe-srv01` and others I've checked.
 
@@ -87,13 +88,13 @@ Variables:
 
 ##### Steps
 
-1. Source common directories scripts [/reg/g/pcds/pyps/config/common_dirs.sh].
-2. If it exists, source common settings for the architecture:
-       [$IOC_COMMON/$T_A/facility/ioc_env.sh]
-    a. Copy it over to `/etc/profile.d/ioc_env.sh`
-    b. Ensure it's executable
+1. Source common directories scripts [/reg/g/pcds/pyps/config/common_dirs.sh](/reg/g/pcds/pyps/config/common_dirs.sh).
+2. If it exists, source common settings for the architecture: 
+    [$IOC_COMMON/$T_A/facility/ioc_env.sh](/additional_files/reg/d/iocCommon/rhel7-x86_64/facility/ioc_env.sh)
+    * Copy it over to `/etc/profile.d/ioc_env.sh`
+    * Ensure it's executable
 3. Set the location for core files (`/tmp`)
 4. Set process level limits (unlimited core size, locked memory, and real-time
    scheduling priority)
-5. Load any kernel modules necessary [/reg/d/iocCommon/rhel7-x86_64/common/kernel-modules.cmd]
-6. Finally, launch IocManager by way of [/reg/g/pcds/pyps/apps/ioc/latest/initIOC]
+5. Load any kernel modules necessary [/reg/d/iocCommon/rhel7-x86_64/common/kernel-modules.cmd](/reg/d/iocCommon/rhel7-x86_64/common/kernel-modules.cmd)
+6. Finally, launch IocManager by way of [/reg/g/pcds/pyps/apps/ioc/latest/initIOC](/reg/g/pcds/pyps/apps/ioc/latest/initIOC)
