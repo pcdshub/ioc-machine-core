@@ -587,8 +587,9 @@ Shows a table of procServ information including port numbers:
 
 ### show_epics_sioc
 
-Usage: `show_epics_sioc [host1] [host2...]`
-Usage: `show_epics_sioc all`
+Usage: 
+1. `show_epics_sioc [host1] [host2...]`
+2. `show_epics_sioc all`
 
 Similar to `ssh_show_procServ`, this shows a table of IOCs - but on one or more
 hosts (or even _all_ configured hosts, found from `$IOC_COMMON/hosts`).
@@ -614,7 +615,7 @@ PID    USER      SIOC                      COMMAND   HOSTNAME            PORT
 
 ### find_pv
 
-Usage: find_pv pv_name [pv_name2 ...]
+Usage: `find_pv pv_name [pv_name2 ...]`
 
 This script will search for each specified EPICS PV in:
   /reg/d/iocData/ioc*/iocInfo/IOC.pvlist
@@ -632,7 +633,7 @@ Typically this is /iocs mounting /reg/g/pcds/package/epics/ioc
 
 ### updateScreenLinks
 
-usage: `updateScreenLinks <pathToScreenRelease>`
+Usage: `updateScreenLinks <pathToScreenRelease>`
 
 Creates a soft link to the specified directory in the epics-dev version of each
 hutch's edm home directory.  The soft link name is derived from the basename of
@@ -653,10 +654,10 @@ updateScreenLinks modules/history/R0.4.0/historyScreens
 
 ### gsed
 
-```
-Usage: gsed sedExpr file ....
-Example: gsed s/R0.1.0/R0.2.0/g ioc-tst-cam1.cfg ioc-*2.cfg
+Usage: `gsed sedExpr file ....`
 
+For example:
+```
 $ sed s/R0.1.0/R0.2.0/g in specified files
 ============ ioc-tst-cam1.cfg: UPDATED
 ============ ioc-tst-cam2.cfg: Same, N/C
