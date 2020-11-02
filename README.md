@@ -35,6 +35,8 @@ images.
 Startup
 -------
 
+![Script order](.docs/script_order.png)
+
 ### procmgrd.service
 
 If configured, this will start the process manager daemon after
@@ -73,7 +75,7 @@ scripts on a shared filesystem, notably those in `$IOC_COMMON`
 
 1. Use paths from `/etc/pathinit` or fall back to defaults in `ioc.sh`
 2. If it exists, execute `$IOC_COMMON/hosts/$(hostname -s)/startup.cmd` and exit.
-3. If it exists, execute `$IOC_COMMON/rhel7-x86_64/common/startup.cmd ` and exit.
+3. If it exists, execute `$IOC_COMMON/rhel7-x86_64/common/startup.cmd` and exit.
 4. Otherwise, do nothing.
 
 
@@ -253,7 +255,8 @@ Sets common environment variables for launching IOCs.
     SETUP_SITE_TOP=/reg/g/pcds/setup
     TOOLS_SITE_TOP=/reg/common/tools
     ```
-3. Source `epicsenv-cur.sh` from `/reg/g/pcds/setup/epicsenv-cur`
+3. Source setup script `/reg/g/pcds/setup/epicsenv-cur.sh` for the latest
+   supported EPICS environment settings.
     * Exception: on ARM7L platforms, `epicsenv-3.15.5-apalis-2.0.sh` is used.
 4. Set the variables:
     * If not already set, `PROCSERV_VERSION=2.8.0-1.1.0`
@@ -647,8 +650,8 @@ of our EPICS releases:
 Examples:
 
 ```
-updateScreenLinks /reg/g/pcds/epics/ioc/las/fstiming/R2.3.0/fstimingScreens
-updateScreenLinks modules/history/R0.4.0/historyScreens
+$ updateScreenLinks /reg/g/pcds/epics/ioc/las/fstiming/R2.3.0/fstimingScreens
+$ updateScreenLinks modules/history/R0.4.0/historyScreens
 ```
 
 
@@ -658,7 +661,7 @@ Usage: `gsed sedExpr file ....`
 
 For example:
 ```
-$ sed s/R0.1.0/R0.2.0/g in specified files
+$ gsed s/R0.1.0/R0.2.0/g ioc-tst*.cfg
 ============ ioc-tst-cam1.cfg: UPDATED
 ============ ioc-tst-cam2.cfg: Same, N/C
 ```

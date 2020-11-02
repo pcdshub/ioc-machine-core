@@ -1,0 +1,154 @@
+digraph sequence {
+    node [shape=record];
+    splines=ortho;
+    layout = dot;
+    fontsize = 10;
+
+    "boot" [shape=Mdiamond];
+    boot -> "multi-user.target";
+
+    "multi-user.target" ->
+        "ioc.service";
+
+    subgraph cluster_1 {
+        rank="TB";
+        label="ioc.service";
+        color=black;
+        "ioc.service" ->
+          "/etc/pathinit" ->
+          "$IOC_COMMON/rhel7-x86_64/common/startup.cmd";
+
+        subgraph cluster_2 {
+            rank="TB";
+            label="startup.cmd";
+            color=maroon;
+
+            "$IOC_COMMON/rhel7-x86_64/common/startup.cmd" ->
+                S1 -> 
+                "$IOC_COMMON/$T_A/facility/ioc_env.sh" ->
+                "/reg/d/iocCommon/rhel7-x86_64/common/kernel-modules.cmd" ->
+                "/reg/g/pcds/pyps/apps/ioc/latest/initIOC";
+
+            S1 [label="/reg/g/pcds/pyps/config/common_dirs.sh"];
+
+            subgraph cluster_3 {
+                rank="TB";
+                label="initIOC";
+                color=deepskyblue;
+                "/reg/g/pcds/pyps/apps/ioc/latest/initIOC" ->
+                    "cfg from $PYPS_ROOT/config/hosts.special" -> 
+                    "set SCRIPTROOT $PYPS_ROOT/config/$cfg/iocmanager" ->
+                    "$PSPKG_ROOT/etc/set_env.sh" -> 
+                    "/reg/g/pcds/pyps/apps/ioc/latest/initIOC.hutch";
+
+                subgraph cluster_4 {
+                    rank="TB";
+                    label="initIOC.hutch";
+                    color=darkred;
+                    "/reg/g/pcds/pyps/apps/ioc/latest/initIOC.hutch" ->
+                      "$IOC_COMMON/All/${cfg}_env.sh" ->
+                      "$IOC_COMMON/All/common_env.sh" ->
+                      "$IOC_ROOT/../modules/ev2_driver/latest/driver/evr_load_module" ->
+                      "/opt/EDTpdv/edtinit start" ->
+                      "$SCRIPTROOT/runRepeater" ->
+                      "$SCRIPTROOT/startAll $cfg $host" ->
+                      "$SCRIPTROOT/startAll xrt $host" ->
+                      "$SCRIPTROOT/startAll las $host";
+
+                    subgraph cluster_5 {
+                        rank="TB";
+                        label="common_env.sh";
+                        color=mediumslateblue;
+                        "$IOC_COMMON/All/common_env.sh" ->
+                          "/reg/g/pcds/pyps/config/common_dirs.sh" ->
+                          "/reg/g/pcds/setup/epicsenv-cur.sh" ->
+                          "(ARM) epicsenv-3.15.5-apalis-2.0.sh" ->
+                          "create directories as $IOC_USER";
+
+                        subgraph cluster_6 {
+                            rank="TB";
+                            color=darkolivegreen;
+                            label="epicsenv-cur.sh";
+                            "/reg/g/pcds/setup/epicsenv-cur.sh" ->
+                              E1 -> 
+                              E2 ->
+                              "/reg/g/pcds/setup/generic-epics-setup.sh" ->
+                              "/reg/g/pcds/setup/pcds_shortcuts.sh";
+
+                            E1 [label="/reg/g/pcds/pyps/config/common_dirs.sh"];
+                            E2 [label="/reg/g/pcds/setup/pathmunge.sh"];
+
+                            subgraph cluster_7 {
+                                rank="TB";
+                                color=lightcoral;
+                                label="generic-epics-setup.sh";
+                                "/reg/g/pcds/setup/generic-epics-setup.sh" ->
+                                  "/reg/g/pcds/setup/epics-ca-env.sh" ->
+                                  GE1 ->
+                                  "${EPICS_BASE}/startup/EpicsHostArch";
+
+                                GE1 [label="/reg/g/pcds/setup/pathmunge.sh"];
+
+                                subgraph cluster_8 {
+                                    rank="TB";
+                                    color=linen;
+                                    label="epics-ca-env.sh";
+                                    "/reg/g/pcds/setup/epics-ca-env.sh" ->
+                                      "/afs/slac/g/pcds/setup/lcls-ca-env.sh";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+# boot
+# multi-user.target
+# ioc.service 
+#   /etc/pathinit 
+#   OR: $IOC_COMMON/hosts/$(hostname -s)/startup.cmd 
+#       $IOC_COMMON/rhel7-x86_64/common/startup.cmd
+# $IOC_COMMON/rhel7-x86_64/common/startup.cmd
+#   /reg/g/pcds/pyps/config/common_dirs.sh
+#   $IOC_COMMON/$T_A/facility/ioc_env.sh
+#   /reg/d/iocCommon/rhel7-x86_64/common/kernel-modules.cmd
+#   /reg/g/pcds/pyps/apps/ioc/latest/initIOC
+# /reg/g/pcds/pyps/apps/ioc/latest/initIOC
+#   ** $PYPS_ROOT/config/hosts.special
+#   SCRIPTROOT=$PYPS_ROOT/config/${cfg}/iocmanager
+#   $PSPKG_ROOT/etc/set_env.sh
+#   /reg/g/pcds/pyps/apps/ioc/latest/initIOC.hutch
+# /reg/g/pcds/pyps/apps/ioc/latest/initIOC.hutch
+#   $IOC_COMMON/All/${cfg}_env.sh
+#   $IOC_COMMON/All/common_env.sh
+#   $IOC_ROOT/../modules/ev2_driver/latest/driver/evr_load_module
+#   /opt/EDTpdv/edtinit start
+#   $SCRIPTROOT/runRepeater
+#   $SCRIPTROOT/startAll $cfg $host
+#   $SCRIPTROOT/startAll xrt $host
+#   $SCRIPTROOT/startAll las $host
+
+
+# $SCRIPTROOT/startAll
+#   $SCRIPTROOT/startAll.py
+# $IOC_COMMON/All/common_env.sh
+#   /reg/g/pcds/pyps/config/common_dirs.sh
+#   /reg/g/pcds/setup/epicsenv-cur.sh
+#   (ARM) epicsenv-3.15.5-apalis-2.0.sh
+#   create directories as $IOC_USER
+# /reg/g/pcds/setup/epicsenv-cur.sh
+#   /reg/g/pcds/pyps/config/common_dirs.sh
+#   /reg/g/pcds/setup/pathmunge.sh
+#   /reg/g/pcds/setup/generic-epics-setup.sh
+#   /reg/g/pcds/setup/pcds_shortcuts.sh
+# /reg/g/pcds/setup/pathmunge.sh
+# /reg/g/pcds/setup/generic-epics-setup.sh
+#   /reg/g/pcds/setup/epics-ca-env.sh
+#   /reg/g/pcds/setup/pathmunge.sh
+#   ${EPICS_BASE}/startup/EpicsHostArch
+# /reg/g/pcds/setup/pcds_shortcuts.sh
+# /reg/g/pcds/setup/epics-ca-env.sh
+#   /afs/slac/g/pcds/setup/lcls-ca-env.sh
