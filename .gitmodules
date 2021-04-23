@@ -19,3 +19,6 @@
 [submodule "reg/g/pcds/config"]
 	path = reg/g/pcds/config
 	url = https://github.com/pcdshub/epics-config
+[submodule "reg/g/pcds/gateway"]
+	path = reg/g/pcds/gateway
+	url = https://github.com/pcdshub/gateway-setup
