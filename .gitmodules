@@ -3,10 +3,19 @@
 	url = https://github.com/pcdshub/IocManager
 [submodule "reg/d/iocCommon/rhel7-x86_64"]
 	path = reg/d/iocCommon/rhel7-x86_64
-	url = git@github.com:pcdshub/iocCommon-rhel7
+	url = https://github.com/pcdshub/iocCommon-rhel7
 [submodule "reg/g/pcds/setup"]
 	path = reg/g/pcds/setup
 	url = git@github.com:pcdshub/epics-setup
 [submodule "reg/g/pcds/pyps/config"]
 	path = reg/g/pcds/pyps/config
+	url = https://github.com/pcdshub/epics-config
+[submodule "reg/d/iocCommon/All"]
+	path = reg/d/iocCommon/All
+	url = https://github.com/pcdshub/iocCommon-All
+[submodule "reg/d/iocCommon/hosts"]
+	path = reg/d/iocCommon/hosts
+	url = https://github.com/pcdshub/iocCommon-hosts
+[submodule "reg/g/pcds/config"]
+	path = reg/g/pcds/config
 	url = https://github.com/pcdshub/epics-config
