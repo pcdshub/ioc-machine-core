@@ -4,9 +4,9 @@
 [submodule "reg/d/iocCommon/rhel7-x86_64"]
 	path = reg/d/iocCommon/rhel7-x86_64
 	url = git@github.com:pcdshub/iocCommon-rhel7
-[submodule "reg/d/iocCommon/All"]
-	path = reg/d/iocCommon/All
-	url = git@github.com:pcdshub/iocCommon-All
 [submodule "reg/g/pcds/setup"]
 	path = reg/g/pcds/setup
 	url = git@github.com:pcdshub/epics-setup
+[submodule "reg/g/pcds/pyps/config"]
+	path = reg/g/pcds/pyps/config
+	url = https://github.com/pcdshub/epics-config
