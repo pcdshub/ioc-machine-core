@@ -2,9 +2,12 @@ import os
 import re
 import graphviz
 import string
+import pprint
 import pathlib
 
 FILE_RE = re.compile(r"([^ =][/a-z_\-0-9$(){}\.]+)", re.IGNORECASE)
+EXPORT_RE = re.compile(r"export\s*([^=]+)\s*=\s*(.*)$")
+NON_EXPORT_RE = re.compile(r"^\s*([A-Za-z_][A-Za-z_0-9]+)\s*=(.*)$")
 
 MODULE_PATH = pathlib.Path(__file__).resolve().parent
 TOP_PATH = MODULE_PATH
@@ -61,6 +64,7 @@ missing_keys = set()
 missing_files = set()
 bad_items = set()
 
+variables = {}
 graph = graphviz.Digraph()
 
 while stack:
@@ -112,6 +116,11 @@ while stack:
         elif "/" in item:
             stack.append((fn, item))
 
+    for variable, value in EXPORT_RE.findall(contents):
+        variables[variable] = value
+    for variable, value in NON_EXPORT_RE.findall(contents):
+        variables[variable] = value
+
 
 print("Missing keys", list(sorted(missing_keys)))
 print("Bad items", list(sorted(bad_items)))
@@ -119,7 +128,7 @@ print("Missing files:")
 for fn in sorted(missing_files):
     print(f"    {fn}")
 
-import pprint
-pprint.pprint(links)
+# pprint.pprint(links)
+pprint.pprint(variables)
 
 graph.render("links", format="pdf")
