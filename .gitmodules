@@ -61,3 +61,7 @@
 [submodule "reg/g/pcds/pyps/apps/hutch-python/amo"]
 	path = reg/g/pcds/pyps/apps/hutch-python/amo
 	url = https://github.com/pcdshub/amo
+[submodule "reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1"]
+	path = reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1
+	url = https://github.com/pcdshub/pspkg-controls-basic
+	branch = R0.0.1
