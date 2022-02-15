@@ -65,3 +65,6 @@
 	path = reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1
 	url = https://github.com/pcdshub/pspkg-controls-basic
 	branch = R0.0.1
+[submodule "reg/g/pcds/common/tools/bin"]
+	path = reg/g/pcds/common/tools/bin
+	url = git@github.com:pcdshub/common-tools-bin
