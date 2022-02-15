@@ -22,3 +22,42 @@
 [submodule "reg/g/pcds/gateway"]
 	path = reg/g/pcds/gateway
 	url = https://github.com/pcdshub/gateway-setup
+[submodule "reg/g/pcds/pyps/apps/hutch-python/device_config"]
+	path = reg/g/pcds/pyps/apps/hutch-python/device_config
+	url = https://github.com/pcdshub/device_config
+[submodule "reg/g/pcds/pyps/apps/hutch-python/lucid_config"]
+	path = reg/g/pcds/pyps/apps/hutch-python/lucid_config
+	url = https://github.com/pcdshub/lucid_config/
+[submodule "reg/g/pcds/pyps/apps/hutch-python/mec"]
+	path = reg/g/pcds/pyps/apps/hutch-python/mec
+	url = https://github.com/pcdshub/mec
+[submodule "reg/g/pcds/pyps/apps/hutch-python/mfx"]
+	path = reg/g/pcds/pyps/apps/hutch-python/mfx
+	url = https://github.com/pcdshub/mfx
+[submodule "reg/g/pcds/pyps/apps/hutch-python/xpp"]
+	path = reg/g/pcds/pyps/apps/hutch-python/xpp
+	url = https://github.com/pcdshub/xpp
+[submodule "reg/g/pcds/pyps/apps/hutch-python/rix"]
+	path = reg/g/pcds/pyps/apps/hutch-python/rix
+	url = https://github.com/pcdshub/rix
+[submodule "reg/g/pcds/pyps/apps/hutch-python/cxi"]
+	path = reg/g/pcds/pyps/apps/hutch-python/cxi
+	url = https://github.com/pcdshub/cxi
+[submodule "reg/g/pcds/pyps/apps/hutch-python/sxr"]
+	path = reg/g/pcds/pyps/apps/hutch-python/sxr
+	url = https://github.com/pcdshub/sxr
+[submodule "reg/g/pcds/pyps/apps/hutch-python/tmo"]
+	path = reg/g/pcds/pyps/apps/hutch-python/tmo
+	url = https://github.com/pcdshub/tmo
+[submodule "reg/g/pcds/pyps/apps/hutch-python/ued"]
+	path = reg/g/pcds/pyps/apps/hutch-python/ued
+	url = https://github.com/pcdshub/ued
+[submodule "reg/g/pcds/pyps/apps/hutch-python/xcs"]
+	path = reg/g/pcds/pyps/apps/hutch-python/xcs
+	url = https://github.com/pcdshub/xcs
+[submodule "reg/g/pcds/pyps/apps/hutch-python/Bug-Reports"]
+	path = reg/g/pcds/pyps/apps/hutch-python/Bug-Reports
+	url = https://github.com/pcdshub/Bug-Reports
+[submodule "reg/g/pcds/pyps/apps/hutch-python/amo"]
+	path = reg/g/pcds/pyps/apps/hutch-python/amo
+	url = https://github.com/pcdshub/amo
