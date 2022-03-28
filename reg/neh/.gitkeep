@@ -1,0 +1,3 @@
+If this directory does not exist, /afs/slac/g/pcds/setup/lcls-ca-env.sh
+will be sourced in epics-ca-env.sh.  This file doesn't exist in our
+repository/branch.

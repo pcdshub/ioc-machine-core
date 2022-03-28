@@ -1,0 +1,48 @@
+# syntax=docker/dockerfile:1.4
+# vi: syntax=Dockerfile
+
+FROM centos:centos7.9.2009
+
+# Install things from yum, including build requirements for epics
+RUN yum update -y && \
+    yum -y install procps-ng file git wget openssl-devel which \
+        centos-release-scl  which \
+        readline-devel ncurses-devel \
+        && \
+    yum -y install rh-git218 && \
+    yum -y groupinstall 'Development Tools' && \
+    yum -y clean all
+
+COPY <<EOF /etc/profile.d/enable_git218.sh
+#!/bin/bash
+source scl_source enable rh-git218
+EOF
+
+COPY <<EOF /etc/profile.d/epics-on-docker.sh
+#!/bin/bash
+export EPICS_HOST_ARCH=rhel7-x86_64
+EOF
+
+RUN mkdir -p -m 2775 /afs /cds /reg /cds/home/username
+
+# Add in a user with some sensible settings to poke around
+RUN groupadd ps-pcds
+RUN useradd --shell /bin/bash --home-dir /cds/home/username -g ps-pcds username
+
+RUN chown username:ps-pcds /afs /cds /reg /cds/home/username
+
+USER username
+
+WORKDIR /cds/home/username
+
+COPY <<EOF /cds/home/username/.bash_profile
+#!/bin/bash
+
+source /etc/profile
+[ -f ~/.bashrc ] && source ~/.bashrc
+
+unset http_proxy
+unset https_proxy
+EOF
+
+ENTRYPOINT /bin/bash --login

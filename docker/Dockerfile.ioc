@@ -1,0 +1,20 @@
+# syntax=docker/dockerfile:1.4
+# vi: syntax=Dockerfile
+#
+FROM pcds-epics-base:latest AS epics
+
+FROM pcds-ioc-machine-base:latest
+
+# Copy in files from this repository
+WORKDIR /
+
+COPY --chown=username reg ./reg
+COPY --chown=username cds ./cds
+COPY --chown=username afs ./afs
+COPY --from=epics /cds/group/pcds/epics/base/ /cds/group/pcds/epics/base/
+
+WORKDIR /usr
+COPY --chown=username usr/ .
+
+WORKDIR /etc
+COPY --chown=username etc/ ./

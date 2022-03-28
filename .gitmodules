@@ -68,3 +68,6 @@
 [submodule "reg/g/pcds/common/tools/bin"]
 	path = reg/g/pcds/common/tools/bin
 	url = git@github.com:pcdshub/common-tools-bin
+[submodule "cds/home/username/dotfiles"]
+	path = cds/home/username/dotfiles
+	url = git@github.com:pcdshub/shared-dotfiles
