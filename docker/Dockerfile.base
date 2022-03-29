@@ -9,7 +9,7 @@ RUN yum update -y && \
         centos-release-scl  which \
         readline-devel ncurses-devel \
         && \
-    yum -y install rh-git218 && \
+    yum -y install rh-git218 rh-python38 && \
     yum -y groupinstall 'Development Tools' && \
     yum -y clean all
 
@@ -24,6 +24,8 @@ export EPICS_HOST_ARCH=rhel7-x86_64
 EOF
 
 RUN mkdir -p -m 2775 /afs /cds /reg /cds/home/username
+RUN ln -s /opt/rh/rh-python38/root/bin/python3.8 /usr/bin/python3 && \
+    ln -s /opt/rh/rh-python38/root/bin/pip /usr/bin/pip3
 
 # Add in a user with some sensible settings to poke around
 RUN groupadd ps-pcds
@@ -34,15 +36,5 @@ RUN chown username:ps-pcds /afs /cds /reg /cds/home/username
 USER username
 
 WORKDIR /cds/home/username
-
-COPY <<EOF /cds/home/username/.bash_profile
-#!/bin/bash
-
-source /etc/profile
-[ -f ~/.bashrc ] && source ~/.bashrc
-
-unset http_proxy
-unset https_proxy
-EOF
 
 ENTRYPOINT /bin/bash --login

@@ -71,3 +71,6 @@
 [submodule "cds/home/username/dotfiles"]
 	path = cds/home/username/dotfiles
 	url = git@github.com:pcdshub/shared-dotfiles
+[submodule "reg/common/package/release/controls-basic-0.0.1"]
+	path = reg/common/package/release/controls-basic-0.0.1
+	url = https://github.com/pcdshub/pspkg-controls-basic
