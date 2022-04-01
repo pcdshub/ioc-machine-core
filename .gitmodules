@@ -67,3 +67,6 @@
 [submodule "cds/home/username/dotfiles"]
 	path = cds/home/username/dotfiles
 	url = git@github.com:pcdshub/shared-dotfiles
+[submodule "reg/g/pcds/pyps/apps/IocManager/latest"]
+	path = reg/g/pcds/pyps/apps/IocManager/latest
+	url = https://github.com/pcdshub/IocManager
