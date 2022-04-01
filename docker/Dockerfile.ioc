@@ -18,3 +18,13 @@ COPY --chown=username usr/ .
 
 WORKDIR /etc
 COPY --chown=username etc/ ./
+
+# Extracts to:
+#  * /reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1/x86_64-rhel7-gcc48-opt/
+#
+#  e.g.,
+#  * /reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1/x86_64-rhel7-gcc48-opt/bin/python
+# 
+#  --exclude is due to a packaging bug in controls-basic release 0.0.1
+RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0.0.1/controls-basic-0.0.1.tgz | \
+    tar xfz - -C /reg --touch --no-same-owner --strip-components=2

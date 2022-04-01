@@ -4,11 +4,29 @@
 FROM centos:centos7.9.2009
 
 # Install things from yum, including build requirements for epics
+# The long list is a slightly-pruned version of what gets installed based on
+# "ioctools" in puppet.  Some are duplicates to the first section that I
+# started out with and should be pruned.
 RUN yum update -y && \
-    yum -y install procps-ng file git wget openssl-devel which \
-        centos-release-scl  which \
-        readline-devel ncurses-devel \
-        && \
+    yum -y install procps-ng file git wget openssl-devel \
+        centos-release-scl which readline-devel ncurses-devel \
+        \
+        alsa-lib atk bison blas bzip2-devel compat-libf2c-34 \
+        emacs-common fontconfig gcc gcc-c++ glib2-devel glibc-devel glibc-headers \
+        gnome-terminal gsl gtk2 iputils kernel kernel-devel kernel-headers lapack \
+        libgfortran libicui18n libicu libICE libjpeg-turbo libpng-devel libSM \
+        libstdc++-devel libX11 libX11-common libXaw libxcb libXcomposite libXcursor \
+        libXfont libXft libXinerama libXmu libXp libXpm libXrandr libXrender \
+        libXScrnSaver libXt libXt-devel libXtst libXxf86vm mariadb mesa-libGL \
+        mesa-libGLU motif ncurses-term net-snmp-agent-libs net-snmp-libs \
+        net-snmp-utils nmap nmap-ncat numpy openssl-devel pango pcre2 perl-devel \
+        postgresql-libs python-ldap python-magic python-nose python-perf \
+        python-requests python-setuptools python-simplejson python-urllib3 qt \
+        qt-devel qt-settings qt-x11 readline-devel sudo tcl tk unixODBC \
+        vim-enhanced uuid vim-minimal vim-X11 xorg-x11-fonts-100dpi \
+        xorg-x11-fonts-75dpi xorg-x11-fonts-misc xorg-x11-fonts-Type1 \
+        xorg-x11-font-utils xorg-x11-utils xorg-x11-server-utils xorg-x11-xbitmaps \
+        xorg-x11-xinit xz zlib && \
     yum -y install rh-git218 rh-python38 && \
     yum -y groupinstall 'Development Tools' && \
     yum -y clean all
@@ -28,8 +46,10 @@ RUN ln -s /opt/rh/rh-python38/root/bin/python3.8 /usr/bin/python3 && \
     ln -s /opt/rh/rh-python38/root/bin/pip /usr/bin/pip3
 
 # Add in a user with some sensible settings to poke around
-RUN groupadd ps-pcds
-RUN useradd --shell /bin/bash --home-dir /cds/home/username -g ps-pcds username
+RUN groupadd ps-pcds && \
+    groupadd sudo && \
+    useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds --groups sudo username && \
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 RUN chown username:ps-pcds /afs /cds /reg /cds/home/username
 
