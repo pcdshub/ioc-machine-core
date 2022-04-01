@@ -30,7 +30,9 @@ RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0
     tar xfz - -C /reg --touch --no-same-owner --strip-components=2
 
 # Testing section
-RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc
+RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc && \
+    mkdir --mode=2777 -p /reg/d/iocData/ioc-tst-docker/ && \
+    mkdir --mode=2777 -p /reg/g/pcds/pyps/config/.host/
 
 # Keep this at the end so the image ends up in the "username" home.
 WORKDIR /cds/home/username
