@@ -1,5 +1,6 @@
 DOCKER_BUILDKIT=1
-RUN_ARGS?=
+HOSTNAME?=ioc-tst-docker
+RUN_ARGS?="--hostname=$(HOSTNAME)"
 
 all: run-ioc
 
