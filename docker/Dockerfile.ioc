@@ -28,3 +28,6 @@ COPY --chown=username etc/ ./
 #  --exclude is due to a packaging bug in controls-basic release 0.0.1
 RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0.0.1/controls-basic-0.0.1.tgz | \
     tar xfz - -C /reg --touch --no-same-owner --strip-components=2
+
+# Keep this at the end so the image ends up in the "username" home.
+WORKDIR /cds/home/username

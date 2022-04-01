@@ -22,7 +22,4 @@ build-ioc: build-base build-epics docker/Dockerfile.ioc ./afs ./cds ./usr
 run-ioc: build-ioc
 	docker run -it $(RUN_ARGS) pcds-ioc:latest
 
-run-ioc-as-root:
-	make RUN_ARGS="--user root" run-ioc
-
-.PHONY: build-ioc build-base build-epics initialize run-ioc run-ioc-as-root all
+.PHONY: build-ioc build-base build-epics initialize run-ioc all
