@@ -29,5 +29,8 @@ COPY --chown=username etc/ ./
 RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0.0.1/controls-basic-0.0.1.tgz | \
     tar xfz - -C /reg --touch --no-same-owner --strip-components=2
 
+# Testing section
+RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc
+
 # Keep this at the end so the image ends up in the "username" home.
 WORKDIR /cds/home/username
