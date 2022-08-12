@@ -1,0 +1,38 @@
+# syntax=docker/dockerfile:1.4
+# vi: syntax=Dockerfile
+#
+FROM pcds-epics-base:latest AS epics
+
+FROM pcds-ioc-machine-base:latest
+
+# Copy in files from this repository
+WORKDIR /
+
+COPY --chown=username reg ./reg
+COPY --chown=username cds ./cds
+COPY --chown=username afs ./afs
+COPY --from=epics /cds/group/pcds/epics/base/ /cds/group/pcds/epics/base/
+
+WORKDIR /usr
+COPY --chown=username usr/ .
+
+WORKDIR /etc
+COPY --chown=username etc/ ./
+
+# Extracts to:
+#  * /reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1/x86_64-rhel7-gcc48-opt/
+#
+#  e.g.,
+#  * /reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1/x86_64-rhel7-gcc48-opt/bin/python
+# 
+#  --exclude is due to a packaging bug in controls-basic release 0.0.1
+RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0.0.1/controls-basic-0.0.1.tgz | \
+    tar xfz - -C /reg --touch --no-same-owner --strip-components=2
+
+# Testing section
+RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc && \
+    mkdir --mode=2777 -p /reg/d/iocData/ioc-tst-docker/ && \
+    mkdir --mode=2777 -p /reg/g/pcds/pyps/config/.host/
+
+# Keep this at the end so the image ends up in the "username" home.
+WORKDIR /cds/home/username

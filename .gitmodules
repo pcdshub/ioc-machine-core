@@ -61,10 +61,15 @@
 [submodule "reg/g/pcds/pyps/apps/hutch-python/amo"]
 	path = reg/g/pcds/pyps/apps/hutch-python/amo
 	url = https://github.com/pcdshub/amo
-[submodule "reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1"]
-	path = reg/g/pcds/pkg_mgr/release/controls-basic-0.0.1
-	url = https://github.com/pcdshub/pspkg-controls-basic
-	branch = R0.0.1
 [submodule "reg/g/pcds/common/tools/bin"]
 	path = reg/g/pcds/common/tools/bin
 	url = git@github.com:pcdshub/common-tools-bin
+[submodule "cds/home/username/dotfiles"]
+	path = cds/home/username/dotfiles
+	url = git@github.com:pcdshub/shared-dotfiles
+[submodule "reg/g/pcds/pyps/apps/IocManager/latest"]
+	path = reg/g/pcds/pyps/apps/IocManager/latest
+	url = https://github.com/pcdshub/IocManager
+[submodule "reg/g/pcds/pkg_mgr/etc"]
+	path = reg/g/pcds/pkg_mgr/etc
+	url = https://github.com/pcdshub/pspkg-etc

@@ -1,0 +1,27 @@
+# syntax=docker/dockerfile:1.4
+# vi: syntax=Dockerfile
+
+FROM pcds-ioc-machine-base:latest
+
+# All epics-base dependencies for building
+RUN git clone --mirror https://github.com/slac-epics/normativeTypesCPP /afs/slac/g/cd/swe/git/repos/package/epics/modules/normativeTypesCPP.git && \
+    git clone --mirror https://github.com/slac-epics/pvAccessCPP /afs/slac/g/cd/swe/git/repos/package/epics/modules/pvAccessCPP.git && \
+    git clone --mirror https://github.com/slac-epics/pvDataCPP /afs/slac/g/cd/swe/git/repos/package/epics/modules/pvDataCPP.git && \
+    git clone --mirror https://github.com/slac-epics/pvDatabaseCPP /afs/slac/g/cd/swe/git/repos/package/epics/modules/pvDatabaseCPP.git && \
+    git clone --mirror https://github.com/epics-base/pva2pva /afs/slac/g/cd/swe/git/repos/package/epics/modules/pva2pva.git && \
+    git clone --mirror https://github.com/slac-epics/pvaClientCPP /afs/slac/g/cd/swe/git/repos/package/epics/modules/pvaClientCPP.git
+
+# epics-base itself
+RUN git clone --recursive --single-branch --depth 1 --branch R7.0.2-2.branch \
+        https://github.com/slac-epics/epics-base /cds/group/pcds/epics/base/R7.0.2-2.0
+
+# A bit of a hack to always give RHEL7 instead of linux-x86_64
+COPY --chown=username <<EOF /cds/group/pcds/epics/base/R7.0.2-2.0/startup/EpicsHostArch
+#!/bin/bash
+echo "rhel7-x86_64"
+EOF
+
+RUN cd /cds/group/pcds/epics/base/R7.0.2-2.0 && \
+    chmod +x startup/EpicsHostArch && \
+    make -j 4 && \
+    make clean
