@@ -82,7 +82,6 @@ COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/xpp /reg/g/
 COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/ioc/latest /reg/g/pcds/pyps/apps/ioc/latest/.git
 COPY --chown=username .git/modules/reg/g/pcds/pyps/config /reg/g/pcds/pyps/config/.git
 COPY --chown=username .git/modules/reg/g/pcds/setup /reg/g/pcds/setup/.git
-COPY --chown=username .git/modules/* /
 
 # Testing section
 RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc && \
