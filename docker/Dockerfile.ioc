@@ -29,6 +29,60 @@ COPY --chown=username etc/ ./
 RUN curl -L https://github.com/pcdshub/pspkg-controls-basic/releases/download/R0.0.1/controls-basic-0.0.1.tgz | \
     tar xfz - -C /reg --touch --no-same-owner --strip-components=2
 
+# Fix up git submodule .git directories
+WORKDIR /
+RUN rm -f /cds/home/username/dotfiles/.git \
+  /reg/d/iocCommon/All/.git \
+  /reg/d/iocCommon/hosts/.git \
+  /reg/d/iocCommon/rhel7-x86_64/.git \
+  /reg/g/pcds/common/tools/bin/.git \
+  /reg/g/pcds/config/.git \
+  /reg/g/pcds/gateway/.git \
+  /reg/g/pcds/pkg_mgr/etc/.git \
+  /reg/g/pcds/pyps/apps/IocManager/latest/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/Bug-Reports/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/amo/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/cxi/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/device_config/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/lucid_config/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/mec/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/mfx/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/rix/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/sxr/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/tmo/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/ued/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/xcs/.git \
+  /reg/g/pcds/pyps/apps/hutch-python/xpp/.git \
+  /reg/g/pcds/pyps/apps/ioc/latest/.git \
+  /reg/g/pcds/pyps/config/.git \
+  /reg/g/pcds/setup/.git
+
+COPY --chown=username .git/modules/cds/home/username/dotfiles /cds/home/username/dotfiles/.git
+COPY --chown=username .git/modules/reg/d/iocCommon/All /reg/d/iocCommon/All/.git
+COPY --chown=username .git/modules/reg/d/iocCommon/hosts /reg/d/iocCommon/hosts/.git
+COPY --chown=username .git/modules/reg/d/iocCommon/rhel7-x86_64 /reg/d/iocCommon/rhel7-x86_64/.git
+COPY --chown=username .git/modules/reg/g/pcds/common/tools/bin /reg/g/pcds/common/tools/bin/.git
+COPY --chown=username .git/modules/reg/g/pcds/config /reg/g/pcds/config/.git
+COPY --chown=username .git/modules/reg/g/pcds/gateway /reg/g/pcds/gateway/.git
+COPY --chown=username .git/modules/reg/g/pcds/pkg_mgr/etc /reg/g/pcds/pkg_mgr/etc/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/IocManager/latest /reg/g/pcds/pyps/apps/IocManager/latest/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/Bug-Reports /reg/g/pcds/pyps/apps/hutch-python/Bug-Reports/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/amo /reg/g/pcds/pyps/apps/hutch-python/amo/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/cxi /reg/g/pcds/pyps/apps/hutch-python/cxi/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/device_config /reg/g/pcds/pyps/apps/hutch-python/device_config/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/lucid_config /reg/g/pcds/pyps/apps/hutch-python/lucid_config/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/mec /reg/g/pcds/pyps/apps/hutch-python/mec/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/mfx /reg/g/pcds/pyps/apps/hutch-python/mfx/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/rix /reg/g/pcds/pyps/apps/hutch-python/rix/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/sxr /reg/g/pcds/pyps/apps/hutch-python/sxr/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/tmo /reg/g/pcds/pyps/apps/hutch-python/tmo/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/ued /reg/g/pcds/pyps/apps/hutch-python/ued/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/xcs /reg/g/pcds/pyps/apps/hutch-python/xcs/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/hutch-python/xpp /reg/g/pcds/pyps/apps/hutch-python/xpp/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/apps/ioc/latest /reg/g/pcds/pyps/apps/ioc/latest/.git
+COPY --chown=username .git/modules/reg/g/pcds/pyps/config /reg/g/pcds/pyps/config/.git
+COPY --chown=username .git/modules/reg/g/pcds/setup /reg/g/pcds/setup/.git
+
 # Testing section
 RUN sudo useradd --shell /bin/bash --home-dir /cds/home/username --gid ps-pcds tstioc && \
     mkdir --mode=2777 -p /reg/d/iocData/ioc-tst-docker/ && \

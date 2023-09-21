@@ -27,7 +27,7 @@ RUN yum update -y && \
         xorg-x11-fonts-75dpi xorg-x11-fonts-misc xorg-x11-fonts-Type1 \
         xorg-x11-font-utils xorg-x11-utils xorg-x11-server-utils xorg-x11-xbitmaps \
         xorg-x11-xinit xz zlib && \
-    yum -y install rh-git218 rh-python38 && \
+    yum -y install rh-git218 rh-python38 rh-python38-python-devel && \
     yum -y groupinstall 'Development Tools' && \
     yum -y clean all
 
